@@ -1,0 +1,131 @@
+# Testar Pressupostos Estatísticos
+
+Os principais pressupostos estatísticos são:
+
+-   Normalidade dos resíduos
+
+-   Homocedasticidade (variância constante)
+
+-   Independência das observações
+
+Avaliar esses pressupostos é importante para escolher o teste estatístico mais adequado para descrever seus dados. Isso garante a validade dos resultados obtidos, através de uma maior precisão das conclusões obtidas e da robustez da análise.
+
+## Testar a normalidade dos resíduos
+
+Para testar a normalidade dos resíduos, podemos fazer através de análise gráfica (forma visual), e através de testes próprios para isso. A união dos dois métodos é interessante para uma maior certeza do resultado.
+
+### Análise gráfica
+
+::: callout-note
+##### Pacote *datasets*
+
+Descrição: Pacote base do R contendo conjuntos de dados clássicos para demonstração e aprendizado. Uso: Fornece exemplos prontos para prática de análise estatística, visualização e modelagem.
+:::
+
+```{r}
+if(!require(datasets)) install.packages("datasets")
+library(datasets)
+
+insect <- InsectSprays
+
+m2 <- lm(count ~ spray, data = insect)
+
+hist(residuals(m2))
+
+qqnorm(residuals(m2))
+
+# Quanto mais próximos da distribuição diagonal, maior é a chance da normalidade ser presente
+
+```
+
+### Análise com testes
+
+Existem vários testes para analisar a normalidade dos resíduos de um modelo, um exemplo deles é o teste de Shapiro-Wilk O teste de Shapiro-Wilk assume como hipóteses estatísticas: - H0 = Dados seguem a distribuição normal - H1 = Dados não seguem a distribuição normal Ou seja, para valores p menores ou iguais ao alfa estipulado, os dados não seguem a normalidade. E, para valores p maiores que o alfa estipulado, os dados seguem a normalidade.
+
+```{r}
+shapiro.test(residuals(m2))
+```
+
+Teste para normaldiade de resíduos com o pacote *DHARMa*
+
+::: callout-note
+##### Pacote *DHARMa*
+
+Descrição: Ferramentas para diagnóstico de modelos estatísticos, especialmente GLMMs.\
+Uso: Gera resíduos simulados para verificar a adequação de modelos.
+:::
+
+```{r}
+if(!require(DHARMa)) install.packages("DHARMa")
+library(DHARMa)
+
+m2
+plot(simulateResiduals(m2))
+
+# Com esse comando, você pode avaliar normalidade e homocedasticidade de forma conjunta e prática
+```
+
+## Testar a homocedasticidade
+
+Para testar a homogeneidade das variâncias, podemos fazer através de análise gráfica (forma visual), e através de testes próprios para isso. A união dos dois métodos é interessante para uma maior certeza do resultado.
+
+### Análise gráfica
+
+#### Gráfico de Resíduos vs. Valores Ajustados
+
+Melhor para modelos lineares
+
+```{r}
+m2 <- lm(count ~ spray, data = insect)
+plot(m2, which = 1) 
+```
+
+#### Boxplot por Grupo
+
+Melhor para comparação entre grupos
+
+```{r}
+if(!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+
+ggplot(insect, aes(x = spray, y = count)) +
+  geom_boxplot() +
+  labs(title = "Variabilidade entre Grupos")
+```
+
+### Análise com testes
+
+Geralmente, os testes de homocedasticidade tem as hipóteses estatísticas seguindo o mesmo padrão dos testes de normalidade citados As hipóteses estatísticas normalmente são: - H0 = Dados apresentam variâncias homogêneas - H1 = Dados não apresentam variâncias homogêneas
+
+Existem vários testes para avaliar a homogeneidade de variâncias de modelos, aqui exemplificamos dois bastante utilizados.
+
+#### Teste F para comparar duas variâncias
+
+```{r}
+if(!require(readxl)) install.packages("readxl")
+library(readxl)
+if(!require(tidyr)) install.packages("tidyr")
+library(tidyr)
+if(!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+
+mg<- read_excel("dados-diversos.xlsx",
+                       sheet = "magnesio")
+
+mg2 <- mg |>  
+  pivot_wider(names_from = trat, values_from = comp) |> 
+    select(-rep)
+
+var.test(mg2$Mg2, mg2$control)
+```
+
+#### Teste de Bartlett
+
+```{r}
+if(!require(datasets)) install.packages("datasets")
+library(datasets)
+
+insect <- InsectSprays
+
+bartlett.test(count ~ spray, data = insect)
+```

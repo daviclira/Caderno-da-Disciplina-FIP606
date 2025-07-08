@@ -1,0 +1,389 @@
+# Introdução
+
+## O que é o R?
+
+R é uma linguagem de programação e ambiente de software especializado em computação estatística e gráficos. É uma linguagem de código aberto, voltada principalmente para análise estatística e visualização de dados.
+
+## Para que utilizar o R?
+
+-   Análise de dados experimentais
+
+-   Testes estatísticos
+
+-   Criação de gráficos profissionais
+
+-   Manipulação de dados
+
+## 
+
+# Funções básicas do R
+
+## Atribuição
+
+Com a função de atribuição, é possível facilitar o uso de dados, codificando-os com uma string
+
+```{r}
+dados <- 1 + 1
+print(dados)
+
+# A função *print* funciona para colocar na tela a atribuição escolhida
+```
+
+## Baixar e instalar pacotes
+
+Pacotes são complementos adicionais que propiciam funções novas ao R.
+
+Para baixar e instalar deve-se utilizar as funções *install.packages* e *library*, da seguinte forma:
+
+```{r}
+if(!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+```
+
+## Como importar datasets
+
+Datasets são basicamente conjuntos de dados, eles serão a base das análises
+
+Há várias formas de importar datasets, seguem algumas:
+
+### Importar utilizando funções básicas do R
+
+```{r}
+countries <- read.csv("countries.csv")
+```
+
+Com isso conseguimos ler arquivos no formato .csv
+
+### Pacotes para importação de datasets
+
+Pacote para importar arquivos em .xlsx
+
+```{r}
+if(!require(readxl)) install.packages("readxl")
+library(readxl)
+
+diversos <- read_excel("dados-diversos.xlsx")
+
+# Selecionar uma tabela dentro do arquivo .xlsx
+
+diversos2 <- read_excel("dados-diversos.xlsx",
+                       sheet = "sensibilidade_fungicidas")
+```
+
+Pacote para importar diretamente do Google Sheets
+
+```{r}
+if(!require(gsheet)) install.packages("gsheet")
+library(gsheet)
+
+dados_nuvem <- gsheet2tbl("docs.google.com/spreadsheets/u/1/d/1bq2N19DcZdtax2fQW9OHSGMR0X2__Z9T/edit?usp=sharing&ouid=114387405594168347966&rtpof=true&sd=true")
+
+# Podemos selecionar um sheet específico utilizando sua url
+survey <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1bq2N19DcZdtax2fQW9OHSGMR0X2__Z9T/edit?gid=1118819738#gid=1118819738")
+```
+
+## Manipulação de dados
+
+Após importar os dados, podemos manipulá-los de diversas formas
+
+O mais básico da manipulação de dados é a função de atribuir, porém temos muitas outras ferramentas para realizarmos essa atividade.
+
+### Tipos de variáveis
+
+As variáveis de um dataframe são separadas em tipos, o que influencia diretamente nas análises.
+
+Os tipos mais comuns utilizados no R são:
+
+#### a) Numéricas
+
+-   Armazenam números decimais (contínuos)
+
+-   Exemplo: `altura <- 1.75`
+
+#### b) Inteiras
+
+-   Armazenam números inteiros
+
+-   Exemplo: `idade <- 30`
+
+#### c) Caracteres
+
+-   Armazenam texto (strings)
+
+-   Exemplo: `nome <- "João Silva"`
+
+#### d) Lógicas
+
+-   Armazenam valores TRUE (verdadeiro) ou FALSE (falso)
+
+-   Exemplo: `ativo <- TRUE`
+
+#### e) Fatores
+
+-   Representam variáveis categóricas (com níveis definidos)
+
+-   Crucial para análises estatísticas
+
+-   Exemplo: `tratamento <- factor(c("A", "B", "A", "C"))`
+
+Todas as variáveis estão englobadas dentro da classificação estatística das variáveis.
+
+Os quatro tipos são:
+
+a)  Quantitativas
+
+-   Contínuas: podem assumir qualquer valor num intervalo (ex: peso, altura)
+
+-   Discretas: valores inteiros (ex: número de insetos)
+
+b)  Qualitativas
+
+-   Nominais: categorias sem ordem (ex: cor, sexo)
+
+-   Ordinais: categorias com ordem (ex: nível educacional)
+
+### Outros tipos de variáveis utilizadas no R
+
+### Data Frames
+
+-   Estrutura tabular (como uma planilha)
+
+-   Colunas podem ser de diferentes tipos
+
+-   Exemplo: um objeto `data`com colunas `num` (numeric) e `local` (character)
+
+### Listas
+
+-   Coleção ordenada de objetos de qualquer tipo
+
+-   Exemplo: `minha_lista <- list(nome = "Ana", idade = 25, ativo = TRUE)`
+
+### Formas de manipular variáveis
+
+Primeiramente, deve-se identificar os tipos de variáveis presentes no dataframe
+
+Para isso, utilizaremos a função \*glimpse\*, do pacote "dplyr"
+
+```{r}
+if(!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+
+diversos <- read_excel("dados-diversos.xlsx")
+glimpse(diversos)
+```
+
+Com os tipos de variáveis descritos, podemos modifica-los como bem entendermos
+
+#### Tranformar variáveis
+
+Podemos transformar as variáveis de um dataframe no tipo que quisermos, com funções básicas do R
+
+Transformação em variáveis de caracteres
+
+```{r}
+
+diversos$Assess <- as.character(diversos$Assess)
+glimpse(diversos)
+
+# Ao utilizar o "$", podemos selecionar uma coluna específica do dataframe
+```
+
+Transformação em variáveis de numéricas inteiras
+
+```{r}
+
+diversos$Assess <- as.integer(diversos$Assess)
+glimpse(diversos)
+```
+
+Transformação em variáveis de fator
+
+```{r}
+
+diversos$Assess <- as.factor(diversos$Assess)
+glimpse(diversos)
+```
+
+Transformação em variáveis lógicas
+
+```{r}
+
+diversos$Assess <- as.logical(diversos$Assess)
+glimpse(diversos)
+```
+
+Transformação em variáveis de numéricas com decimais
+
+```{r}
+
+diversos$Assess <- as.double(diversos$Assess)
+glimpse(diversos)
+```
+
+### Selecionar partes de dataframes
+
+Para facilitar as análises, ou levar o estudo para um caminho alternativo, podemos selecionar partes de dataframes
+
+#### Selecionar fator de dataframe
+
+::: callout-note
+##### O que é um "pipe"?
+
+O pipe, representado pelo operador \|\> (ou %\>%, em pacotes como o tidyverse), é um operador especial no R que permite encadear operações de forma mais legível e intuitiva.
+
+O pipe pega o resultado da expressão à esquerda e usa como primeiro argumento da função à direita. Isso permite que o fluxo de trabalho seja mais dinâmico e prático.
+:::
+
+```{r}
+# Banco de dados utilizado a seguir
+
+survey <- read_excel("dados-diversos.xlsx",
+                       sheet = "survey")
+
+survey |> 
+  group_by(residue) |> 
+  count()
+
+```
+
+#### Selecionando fatores em conjunto
+
+```{r}
+survey |> 
+  group_by(state, residue) |> 
+  count()
+```
+
+#### Filtrar dados por fatores
+
+```{r}
+RS <- survey |> 
+  filter(state == "RS")
+
+RS
+
+PR <- survey |> 
+  filter(state == "PR")
+
+PR
+```
+
+#### Combinando os conjuntos RS e PR
+
+```{r}
+combinado <- rbind(RS, PR)
+```
+
+#### Selecionar colunas
+
+```{r}
+survey_b <- survey |> 
+  select(year, state, species)
+  
+survey_b
+
+```
+
+#### Selecionar colunas e fatores de forma conjunta
+
+```{r}
+# usando select e filter juntos
+
+survey_b <- survey |> 
+  select(year, state, species) |> 
+  filter(year == "2009")
+
+survey_b
+
+# "filter" = linha, "select" = coluna
+```
+
+### Criar tabela de contingência
+
+Permite agrupamento em formato largo
+
+::: callout-note
+##### Pacote *janitor*
+
+*Descrição*: Ferramentas para limpeza e preparação de dados.\
+*Uso*: Simplifica a limpeza de nomes de colunas, checagem de duplicatas e criação de tabelas de frequência.
+:::
+
+```{r}
+if(!require(janitor)) install.packages("janitor")
+library(janitor)
+
+survey_b |> 
+  tabyl(state, species)
+
+survey_b |> 
+  tabyl(year, species)
+```
+
+Criar gráfico a partir de tabela
+
+::: callout-note
+##### Pacote *ggplot2*
+
+*Descrição*: Cria gráficos elegantes baseados na gramática dos gráficos.\
+*Uso*: Visualizações de dados personalizadas com camadas.
+:::
+
+```{r}
+if(!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+
+survey_b |> 
+  group_by(year, species) |> 
+  count() |> 
+  ggplot(aes(species, n, fill = species)) +
+  geom_col() +
+  facet_wrap(~year)
+
+survey_b |> 
+  group_by(year, species) |> 
+  count() |> 
+  ggplot(aes(year, n, fill = species)) +
+  geom_bar(stat = "identity")
+```
+
+Os gráficos podem ser modificados manualmente pelo *ggplot2*
+
+```{r}
+survey_b |> 
+  group_by(year, species) |> 
+  count() |> 
+  ggplot(aes(year, n, fill = species)) +
+  geom_col() +
+  scale_fill_manual(values = c("red", "blue"))
+
+### scale_fill pode servir para mudanças manuais ou com base em paletas do R
+### fill = preenchimento
+### color = borda ou preenchimento
+
+```
+
+**O pacote ggplot2 será descrito de forma mais detalhada em capítulos posteriores**
+
+Transformar dados da planilha para formato largo (mais prático para realziar as análises)
+
+::: callout-note
+##### Pacote *tidyr*
+
+Descrição: Ferramentas para organização e estruturação de dados. Uso: Transforma dados entre formatos "wide" (amplo) e "long" (longo), trata valores ausentes e aninhados.
+:::
+
+```{r}
+if(!require(tidyr)) install.packages("tidyr")
+library(tidyr)
+
+mg<- read_excel("dados-diversos.xlsx",
+                       sheet = "magnesio")
+
+mg2 <- mg |>  
+  pivot_wider(names_from = trat, values_from = comp) |> 
+    select(-rep)
+
+glimpse(mg2)
+mg2
+```

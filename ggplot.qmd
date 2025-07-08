@@ -1,0 +1,110 @@
+# O básico do pacote *ggplot2*
+
+O ggplot2 é um pacote do R baseado na gramática dos gráficos, que permite criar visualizações de dados de forma estruturada e personalizada. Ele segue a filosofia de camadas, onde cada elemento do gráfico é adicionado passo a passo.
+
+------------------------------------------------------------------------
+
+## Estrutura Básica
+
+Todo gráfico no ggplot2 é construído com:
+
+```{r}
+if(!require(readxl)) install.packages("readxl")
+library(readxl) 
+
+if(!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2) 
+
+milho <- read_excel("dados-diversos.xlsx",
+                       sheet = "milho")
+
+ggplot(data = milho, aes(x = hybrid, y = yield)) +  
+  geom_line() +  # Camada de geometria (pontos, linhas, barras, etc.)
+  labs() +    # Rótulos (título, eixos)
+  theme()     # Ajustes estéticos (cores, fontes, fundo)
+```
+
+### Principais Funções e Camadas
+
+#### **A. ggplot()**
+
+-   Define os dados e mapeamentos estéticos (aes).\
+    *Exemplo*:
+
+```{r}
+milho <- read_excel("dados-diversos.xlsx",
+                       sheet = "milho")
+
+ggplot(milho, aes(x = hybrid, y = yield))
+```
+
+#### \*\*B. Geometrias (geom\_\*)\*\*
+
+-   Define a forma visual dos dados:
+    -   geom_point(): Gráfico de dispersão.\
+    -   geom_line(): Linhas.\
+    -   geom_bar()/geom_col(): Barras.\
+    -   geom_histogram(): Histograma.\
+    -   geom_boxplot(): Boxplot.\
+    -   geom_smooth(): Linha de tendência (regressão).
+
+*Exemplo*:
+
+```{r}
+
+ggplot(milho, aes(x = hybrid, y = yield))+  
+  geom_point(color = "blue", size = 3) 
+```
+
+### \*\*C. Escalas (scale\_\*)\*\*
+
+-   Controlam como os dados são mapeados visualmente:
+    -   scale_x_continuous()/scale_y_continuous(): Ajustam eixos contínuos.\
+    -   scale_color_manual(): Cores personalizadas.\
+    -   scale_fill_gradient(): Preenchimento gradiente.
+
+*Exemplo*:
+
+```{r}
+
+ggplot(milho, aes(x = hybrid, y = yield))+  
+  geom_point() +  
+  scale_color_manual(values = c("red", "green", "blue")) 
+```
+
+### \*\*D. Facetas (facet\_\*)\*\*
+
+-   Divide o gráfico em subgráficos por categoria:
+    -   facet_wrap(\~var): Divide em painéis.\
+    -   facet_grid(var1 \~ var2): Grade 2D.
+
+*Exemplo*:
+
+```{r}
+
+ggplot(milho, aes(x = hybrid, y = yield))+  
+  geom_point() + 
+  facet_wrap(~method) 
+```
+
+### **E. Rótulos e Temas (labs(), theme())**
+
+-   labs(): Adiciona títulos e legendas.\
+-   theme\_\*(): Estilos pré-definidos (theme_bw(), theme_minimal()).\
+-   theme(): Personalização avançada (fontes, cores, fundo).
+
+*Exemplo*:
+
+```{r}
+
+ggplot(milho, aes(x = hybrid, y = yield))+  
+  geom_point() +  
+  labs(title = "Efeitos dos híbridos na produção de milho", x = "Híbridos (wt)", y = "Produção") +  
+  theme_minimal()  
+```
+
+Essas são apenas algumas funções básicas do pacote. Há mais uma combinação enorme de possibilidades para moldar diferentes gráficos, com diversas finalidades. O *ggplot2* é um pacote que apresenta a possibilidade de integração com outros pacotes. Alguns exemplos são:
+
+-   *ggsave*: Salvar gráficos ("nome_do_arquivo.png").
+-   *patchwork*: Unir gráficos para avaliação conjunta.
+-   *ggthemes*: Adiciona mais possibilidades de temáticas para os gráficos.

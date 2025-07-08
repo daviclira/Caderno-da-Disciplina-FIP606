@@ -1,0 +1,29 @@
+{
+  "about.qmd": {
+    "about.html": "c3490755"
+  },
+  "index.qmd": {
+    "index.html": "f830a961"
+  },
+  "intro.qmd": {
+    "intro.html": "f6848895"
+  },
+  "ggplot.qmd": {
+    "ggplot.html": "035a37a3"
+  },
+  "pacs.qmd": {
+    "pacs.html": "9394c640"
+  },
+  "post.qmd": {
+    "post.html": "fddca5af"
+  },
+  "pressupostos.qmd": {
+    "pressupostos.html": "fb908ede"
+  },
+  "shiny.qmd": {
+    "shiny.html": "8b6aaacc"
+  },
+  "testes.qmd": {
+    "testes.html": "2b48b5d8"
+  }
+}

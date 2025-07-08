@@ -1,0 +1,251 @@
+# Sugestões de Pacotes
+
+Essa sessão é dedicada para listar pacotes do R criados pela comunidade e suas funções.
+
+------------------------------------------------------------------------
+
+### *pacman*
+
+*Descrição*: Facilita a instalação e o carregamento de outros pacotes do R.\
+*Uso*: Permite instalar e carregar múltiplos pacotes com uma única função (p_load), evitando a repetição de código.
+
+------------------------------------------------------------------------
+
+### *car* (Companion to Applied Regression)
+
+*Descrição*: Oferece funções para análise de regressão e modelos lineares.\
+*Uso*: Inclui testes como Anova, vif (para multicolinearidade) e transformações de variáveis.
+
+------------------------------------------------------------------------
+
+### *DHARMa*
+
+*Descrição*: Ferramentas para diagnóstico de modelos estatísticos, especialmente GLMMs.\
+*Uso*: Gera resíduos simulados para verificar a adequação de modelos.
+
+------------------------------------------------------------------------
+
+### *dplyr*
+
+*Descrição*: Parte do tidyverse, manipulação eficiente de dados.\
+*Uso*: Operações como filtro (filter), seleção (select), agregação (summarise) e transformação (mutate).
+
+------------------------------------------------------------------------
+
+### *tidytuesdayR*
+
+*Descrição*: Acessa conjuntos de dados do projeto #TidyTuesday.\
+*Uso*: Praticar visualização e análise com dados reais compartilhados semanalmente.
+
+------------------------------------------------------------------------
+
+### *ggplot2*
+
+*Descrição*: Cria gráficos elegantes baseados na gramática dos gráficos.\
+*Uso*: Visualizações personalizadas com camadas.
+
+------------------------------------------------------------------------
+
+### *ggthemes*
+
+*Descrição*: Oferece temas e escalas adicionais para ggplot2.\
+*Uso*: Estilizar gráficos criados com o ggplot2.
+
+------------------------------------------------------------------------
+
+### *ggspatial*
+
+*Descrição*: Adiciona elementos espaciais a gráficos criados com o ggplot2.\
+*Uso*: Incluir escalas, setas de norte ou shapes em mapas.
+
+------------------------------------------------------------------------
+
+### *gsheet*
+
+*Descrição*: Baixa dados diretamente do Google Sheets.\
+*Uso*: Importar planilhas compartilhadas via URL.
+
+------------------------------------------------------------------------
+
+### *lme4*
+
+*Descrição*: Ajusta modelos lineares mistos (LMEMs/GLMEMs).\
+*Uso*: Modelos com efeitos fixos e aleatórios (lmer, glmer).
+
+------------------------------------------------------------------------
+
+### *lmerTest*
+
+*Descrição*: Extende lme4 com testes de significância para LMEMs.\
+*Uso*: Fornece p-valores para efeitos em modelos mistos.
+
+------------------------------------------------------------------------
+
+### *multcomp*
+
+*Descrição*: Realiza comparações múltiplas (post-hoc).\
+*Uso*: Testes como Tukey HSD para diferenças entre grupos.
+
+------------------------------------------------------------------------
+
+### *patchwork*
+
+*Descrição*: Combina gráficos (ggplot2) em layouts complexos.\
+*Uso*: Organizar múltiplos plots em uma única figura com operadores (+, /).
+
+------------------------------------------------------------------------
+
+### *plotly*
+
+*Descrição*: Cria gráficos interativos.\
+*Uso*: Converter gráficos estáticos (ex.: ggplot2) em versões dinâmicas com zoom e tooltips.
+
+------------------------------------------------------------------------
+
+### *readxl*
+
+*Descrição*: Lê arquivos do Excel (.xlsx, .xls).\
+*Uso*: Importar dados sem depender do Java ou outras bibliotecas.
+
+------------------------------------------------------------------------
+
+### *rmarkdown*
+
+*Descrição*: Gera relatórios dinâmicos em HTML, PDF ou Word.\
+*Uso*: Documentos reprodutíveis que combinam código, texto e resultados.
+
+------------------------------------------------------------------------
+
+### *rnaturalearth* (+ *hires* e *data*)
+
+*Descrição*: Dados geoespaciais de mapas mundiais.\
+*Uso*: Obter shapes de países, estados, etc., para visualização.\
+*Complementos*: "rnaturalearthhires" e "rnaturalearthdata".
+
+------------------------------------------------------------------------
+
+### *rsconnect*
+
+*Descrição*: Publica aplicativos Shiny ou relatórios no RStudio Connect.\
+*Uso*: Deploy de projetos diretamente do R.
+
+------------------------------------------------------------------------
+
+### *sandwich*
+
+*Descrição*: Estimadores robustos de variância para modelos.\
+*Uso*: Ajustar erros padrão para heterocedasticidade.
+
+------------------------------------------------------------------------
+
+### *shiny*
+
+*Descrição*: Cria aplicativos web interativos.\
+*Uso*: Desenvolver dashboards ou ferramentas com R.
+
+------------------------------------------------------------------------
+
+### *terra*
+
+*Descrição*: Manipulação de dados raster e espaciais.\
+*Uso*: Análise de imagens, mapas de uso do solo, etc.
+
+------------------------------------------------------------------------
+
+### *tidyverse*
+
+*Descrição*: Conjunto de pacotes para ciência de dados (inclui dplyr, ggplot2, etc.).\
+*Uso*: Abordagem coerente para importar, transformar e visualizar dados.
+
+------------------------------------------------------------------------
+
+### *MASS*
+
+*Descrição*: Funções para estatística aplicada (criação do R).\
+*Uso*: Ajuste de modelos como LDA, regressão robusta (rlm), ou glm.nb.
+
+------------------------------------------------------------------------
+
+### *DT*
+
+*Descrição*: Cria tabelas interativas em HTML (DataTables).\
+*Uso*: Exibir dados em aplicativos Shiny ou relatórios com filtros e paginação.
+
+------------------------------------------------------------------------
+
+### *sf* (Simple Features)
+
+*Descrição*: Manipulação de dados geoespaciais vetoriais.\
+*Uso*: Operações com shapes (pontos, linhas, polígonos) e geometrias.
+
+------------------------------------------------------------------------
+
+### *leaflet*
+
+*Descrição*: Cria mapas interativos baseados em JavaScript.\
+*Uso*: Visualização espacial com camadas, marcadores e popups.
+
+------------------------------------------------------------------------
+
+### *shinywidgets*
+
+*Descrição*: Widgets adicionais para Shiny.\
+*Uso*: Melhorar UI com componentes como dropdowns avançados ou sliders.
+
+------------------------------------------------------------------------
+
+### *rstatix*
+
+*Descrição*: Funções "tidy" para estatística descritiva e testes.\
+*Uso*: Realizar testes como Wilcoxon ou Kruskal-Wallis em pipelines (%\>%).
+
+------------------------------------------------------------------------
+
+### *kableExtra*
+
+*Descrição*: Formata tabelas em HTML/LaTeX.\
+*Uso*: Personalizar tabelas em relatórios (rmarkdown) com cores, tamanhos, etc.
+
+------------------------------------------------------------------------
+
+### *RVAideMemoire*
+
+*Descrição*: Funções auxiliares para estatística e biometria.\
+*Uso*: Testes como ANOVA com post-hoc, transformações de dados.
+
+------------------------------------------------------------------------
+
+### *gridExtra*
+
+*Descrição*: Organiza gráficos em grids.\
+*Uso*: Combinar plots baseados no sistema grid.
+
+------------------------------------------------------------------------
+
+### *nortest*
+
+*Descrição*: Testes de normalidade.\
+*Uso*: Verificar normalidade (ex.: Anderson-Darling, Lilliefors).
+
+------------------------------------------------------------------------
+
+### *multcompView*
+
+*Descrição*: Visualiza comparações múltiplas.\
+*Uso*: Criar gráficos com letras indicando grupos significativos.
+
+------------------------------------------------------------------------
+
+### *agricolae*
+
+*Descrição*: Estatística para agricultura e experimentos.\
+*Uso*: ANOVA, testes de médias (Duncan, LSD), delineamentos experimentais.
+
+------------------------------------------------------------------------
+
+### *agridat*
+
+*Descrição*: Conjuntos de dados agrícolas.\
+*Uso*: Exemplos para análises em agronomia ou biometria.
+
+------------------------------------------------------------------------

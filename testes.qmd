@@ -1,0 +1,212 @@
+# Testes estatísticos
+
+Os testes estatísticos são ferramentas utilizadas para tomar decisões com base em dados, avaliando hipóteses e determinando se as diferenças ou relações observadas são estatisticamente significativas ou se podem ter ocorrido por acaso.
+
+Podemos utilizar uma enorme variedade de testes para analisar nossos dados. A escolha do melhor teste depende do tipo de dados a serem analisados, a distribuição dos dados, dos pressupostos atingidos ou não atingidos, entre outros fatores.
+
+Os testes podem ser divididos de forma geral entre *paramétricos* e *não paramétricos*.
+
+## Testes paramétricos
+
+Pressupõem que os resíduos do modelo seguem uma distribuição normal, e apresentam homogeneidade de variâncias.
+
+### Teste T
+
+Compara médias de dois grupos.\
+Pode ser utilizado em vários tipos
+
+#### Teste T para amostras independentes: 2 grupos não relacionados.
+
+```{r}
+if(!require(readxl)) install.packages("readxl")
+library(readxl)
+if(!require(tidyr)) install.packages("tidyr")
+library(tidyr)
+if(!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+
+mg<- read_excel("dados-diversos.xlsx",
+                       sheet = "magnesio")
+
+mg2 <- mg |>  
+  pivot_wider(names_from = trat, values_from = comp) |> 
+    select(-rep)
+
+
+tmg2 <- t.test(mg2$Mg2, mg2$control)
+```
+
+#### Teste T pareado: Mesmos indivíduos em dois momentos.
+
+::: callout-note
+##### Pacote *rstatix*
+
+Descrição: Funções relacionadas ao grupo "tidy" para estatística descritiva e testes. Uso: Realizar testes como Wilcoxon ou Kruskal-Wallis em pipelines (%\>%).
+:::
+
+```{r}
+if(!require(rstatix)) install.packages("rstatix")
+library(rstatix)
+
+escala <- read_excel("dados-diversos.xlsx",
+                       sheet = "escala")
+
+t_test(acuracia ~ assessment, 
+       data = escala, 
+       paired = T)
+```
+
+#### Teste T para uma amostra: Compara média da amostra com um valor fixo
+
+```{r}
+diversos <- read_excel("dados-diversos.xlsx")
+
+teste_t <- t.test(diversos$ImageJ, mu = 500)
+print(teste_t)
+```
+
+### Regressão Linear
+
+Modela a relação entre uma variável dependente (contínua) e uma ou mais variáveis independentes (contínuas).\
+Objetivo: Prever ou explicar o comportamento da variável resposta. Para isso, usaremos a função "lm", nativa do R.
+
+```{r}
+fungcamp<- read_excel("dados-diversos.xlsx",
+                       sheet = "fungicida_campo")
+
+linearmodel <- lm(PROD ~ FER, data = fungcamp)
+summary(linearmodel)
+
+# Identificar o valor dos coeficientes beta-0 e beta-1
+print(linearmodel)
+```
+
+### ANOVA (Análise de Variância)
+
+Compara médias de três ou mais grupos para verificar diferenças estatísticas.
+
+```{r}
+micelial <- read_excel("dados-diversos.xlsx",
+                       sheet = "micelial")
+
+anova <- aov(tcm ~ especie, data = micelial)
+
+summary(anova)
+
+print(anova)
+```
+
+### ANCOVA (Análise de Covariância)
+
+Combina ANOVA e regressão linear.\
+O objetivo é ajustar o efeito de variáveis contínuas (covariáveis) ao comparar grupos
+
+```{r}
+curve <- read_excel("dados-diversos.xlsx",
+                       sheet = "curve")
+
+ancova <- aov(severity ~ Irrigation + day + Irrigation*day, data = curve)
+
+summary(ancova)
+
+# Quando a interação não for significativa, deve-se retirá-la do modelo e roda-lo novamente.
+
+ancova <- aov(severity ~ Irrigation + day, data = curve)
+
+summary(ancova)
+
+```
+
+### ANOVA bifatorial
+
+A ANOVA bifatorial (ou ANOVA Two-Way) é um teste estatístico que avalia o efeito de dois fatores *categóricos independentes* sobre uma variável *contínua dependente*, além de verificar se há interação entre os fatores.
+
+```{r}
+sensi <- read_excel("dados-diversos.xlsx",
+                       sheet = "sensibilidade_fungicidas")
+
+modsensi <- aov(germination ~ state * dose, data = sensi)
+summary(modsensi)
+```
+
+## Testes não paramétricos
+
+São testes que não exigem suposições rígidas sobre a distribuição dos dados.
+
+### Kruskal-Wallis
+
+ANOVA não paramétrica para comparar medianas de três ou mais grupos independentes.
+
+```{r}
+if(!require(datasets)) install.packages("datasets")
+library(datasets)
+
+insect <- InsectSprays
+
+kruskal.test(count ~ spray, data = insect)
+```
+
+O pacote agricolae tem teste kruskal já mostrando os grupos que diferem
+
+::: callout-note
+##### Pacote *agricolae*
+
+*Descrição*: Apresenta funções estatísticas relacionadas a experimentos agrícolas.\
+*Uso*: ANOVA, testes de médias (Duncan, LSD), delineamentos experimentais.
+:::
+
+```{r}
+if(!require(agricolae)) install.packages("agricolae")
+library(agricolae)
+
+kruskal(insect$count, insect$spray, group = T, console = T)
+```
+
+### Teste de Wilcoxon
+
+Versão não paramétrica para comparar duas amostras pareadas (dados não normais).\
+*Versões*:\
+- *Wilcoxon signed-rank*: Amostras dependentes.
+
+```{r}
+escala <- read_excel("dados-diversos.xlsx",
+                       sheet = "escala")
+
+unaided <- escala |> 
+  filter(assessment == "Unaided") |> 
+  select(acuracia) |> 
+  pull()
+
+aided <- escala |> 
+  filter(assessment == "Aided1") |> 
+  select(acuracia) |> 
+  pull()
+
+wilcox.test(unaided, aided)
+```
+
+-   *Wilcoxon rank-sum (Mann-Whitney U)*: Amostras independentes.
+
+```{r}
+wilcox.test(unaided, aided, paired = F)
+```
+
+### GLM (Modelos Lineares Generalizados)\*
+
+Estende a regressão linear para variáveis resposta não normais.\
+Componentes:\
+
+*Família de distribuições*:\
+- *Gaussiana (normal)*: Para dados contínuos.\
+- *Binomial*: Para proporções/binários\
+- *Poisson*: Para contagens\
+- *Gamma*: Para dados contínuos assimétricos
+
+*Função de ligação*: Conecta preditores à resposta (ex.: logit para binomial).
+
+```{r}
+glm <- glm(PROD ~ FER, data = fungcamp)
+
+summary(glm)
+
+```

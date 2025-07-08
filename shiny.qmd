@@ -1,0 +1,56 @@
+# Aplicativos em Shiny
+
+O *Shiny* é um pacote do R que permite criar aplicativos web interativos diretamente do R. Com ele, é possível transformar análises estáticas em painéis dinâmicos, onde usuários podem ajustar parâmetros e visualizar resultados em tempo real.
+
+## Componentes Básicos
+
+Um app Shiny tem duas partes principais:
+
+### 1- UI (User Interface)
+
+Define a estrutura visual do app (layout, inputs e outputs). Pode ser criada com:\
+- *Funções básicas* (fluidPage(), sidebarLayout()).\
+- *Componentes interativos*:\
+- sliderInput(): Barra deslizante para selecionar valores.\
+- selectInput(): Menu suspenso.\
+- numericInput(): Campo para números.\
+- actionButton(): Botão de ação.
+
+### 2- Server
+
+Contém a lógica do R que processa os inputs e gera outputs (gráficos, tabelas, textos).\
+- *Inputs*: Valores definidos pelo usuário na UI. - *Outputs*: Resultados renderizados.
+
+------------------------------------------------------------------------
+
+## Exemplo Básico
+
+```{r}
+if(!require(shiny)) install.packages("shiny")
+library(shiny)
+
+# UI
+ui <- fluidPage(
+  titlePanel("App Shiny"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins", "Número de bins:", min = 5, max = 50, value = 30)
+    ),
+    mainPanel(
+      plotOutput("histograma")
+    )
+  )
+)
+
+# Server
+server <- function(input, output) {
+  output$histograma <- renderPlot({
+    hist(rnorm(1000), breaks = input$bins, col = "skyblue")
+  })
+}
+
+# Rodar o app
+shinyApp(ui = ui, server = server)
+
+
+```

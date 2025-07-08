@@ -1,0 +1,14 @@
+---
+title: Introdução ao R
+author: Davi Lira
+image: images.png
+about: 
+  template: jolla
+  image-shape: round
+  image-width: 17em
+  links:
+    - text: GitHub
+      href: https://github.com/daviclira
+    - text: Email
+      href: davi.lira@ufv.br
+---

@@ -1,0 +1,70 @@
+# Testes post-hoc
+
+Testes post hoc ("após o fato") são análises estatísticas realizadas após um teste estatístico significativo (como ANOVA ou Kruskal-Wallis) para identificar quais grupos específicos diferem entre si. Eles controlam o erro tipo I (falsos positivos) quando múltiplas comparações são feitas.
+
+## Para Dados Paramétricos
+
+### Tukey HSD (Honest Significant Difference)
+
+Ajusta o valor-p para comparações múltiplas.
+
+```{r}
+if(!require(readxl)) install.packages("readxl")
+library(readxl)
+
+micelial <- read_excel("dados-diversos.xlsx",
+                       sheet = "micelial")
+
+
+anova <- aov(tcm ~ especie, data = micelial)
+
+TukeyHSD(anova)
+
+```
+
+## Para Dados Não Paramétricos
+
+### Dunn Test
+
+Versão não paramétrica do Tukey. O mais indicado para testes Kruskal-Wallis
+
+```{r}
+if(!require(rstatix)) install.packages("rstatix")
+library(rstatix) 
+if(!require(datasets)) install.packages("datasets")
+library(datasets)
+
+insect <- InsectSprays
+
+kuskal <- kruskal.test(count ~ spray, data = insect)
+
+dunn_e <- dunn_test(count ~ spray, data = insect, p.adjust.method = "bonferroni")
+
+dunn_e
+```
+
+### Wilcoxon com Correção de Holm
+
+Comparações pareadas com ajuste de valor-p.
+
+```{r}
+if(!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+
+
+escala <- read_excel("dados-diversos.xlsx",
+                       sheet = "escala")
+
+unaided <- escala |> 
+  filter(assessment == "Unaided") |> 
+  select(acuracia) |> 
+  pull()
+
+aided <- escala |> 
+  filter(assessment == "Aided1") |> 
+  select(acuracia) |> 
+  pull()
+
+pairwise.wilcox.test(unaided, aided, p.adjust.method = "holm")  
+  
+```

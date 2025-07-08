@@ -170,7 +170,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ui-user-interface" id="toc-ui-user-interface" class="nav-link" data-scroll-target="#ui-user-interface">1- UI (User Interface)</a></li>
   <li><a href="#server" id="toc-server" class="nav-link" data-scroll-target="#server">2- Server</a></li>
   </ul></li>
-  <li><a href="#exemplo-básico" id="toc-exemplo-básico" class="nav-link" data-scroll-target="#exemplo-básico">Exemplo Básico</a></li>
+  <li><a href="#estrutura-básica" id="toc-estrutura-básica" class="nav-link" data-scroll-target="#estrutura-básica">Estrutura Básica</a></li>
+  <li><a href="#exemplo" id="toc-exemplo" class="nav-link" data-scroll-target="#exemplo">Exemplo</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -203,8 +204,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="exemplo-básico" class="level2">
-<h2 class="anchored" data-anchor-id="exemplo-básico">Exemplo Básico</h2>
+<section id="estrutura-básica" class="level2">
+<h2 class="anchored" data-anchor-id="estrutura-básica">Estrutura Básica</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(shiny)) <span class="fu">install.packages</span>(<span class="st">"shiny"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -241,6 +242,211 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div><p></p>
 </div>
 </div>
+</section>
+<section id="exemplo" class="level2">
+<h2 class="anchored" data-anchor-id="exemplo">Exemplo</h2>
+<p>O script a seguir, foi utilizado como teste para a aula de produção de aplicativos em shiny, na disciplina FIP606.<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gsheet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gsheet' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'plotly' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Carregamento Direto dos Dados ---</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>url_gsheet <span class="ot">&lt;-</span> <span class="st">"https://docs.google.com/spreadsheets/d/1lX3qjWBZEVRQgBTAfj1tQ_ZGNj5a75D1VTKXwXDdTO8/edit"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>url_export <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"/edit$"</span>, <span class="st">"/export?format=csv"</span>, url_gsheet)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>dados_brutos <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(url_export)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  colunas_necessarias <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"consumo_total"</span>, <span class="st">"temperatura"</span>, <span class="st">"dia"</span>, <span class="st">"tratamento"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(colunas_necessarias <span class="sc">%in%</span> <span class="fu">names</span>(df))) {</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"O dataset não contém todas as colunas necessárias: consumo_total, temperatura, dia e tratamento"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">consumo_total =</span> <span class="fu">as.numeric</span>(consumo_total),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">temperatura =</span> <span class="fu">as.numeric</span>(temperatura),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">dia =</span> <span class="fu">as.numeric</span>(dia),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">tratamento =</span> <span class="fu">as.factor</span>(tratamento)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="fu">paste</span>(<span class="st">"Erro ao carregar os dados:"</span>, e<span class="sc">$</span>message))</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Obter os tratamentos únicos</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>tratamentos_unicos <span class="ot">&lt;-</span> <span class="fu">levels</span>(dados_brutos<span class="sc">$</span>tratamento)</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>tratamentos_unicos <span class="ot">&lt;-</span> <span class="fu">sort</span>(tratamentos_unicos) <span class="co"># Ordena para consistência</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(tratamentos_unicos) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Nenhum tratamento encontrado nos dados. Verifique a coluna 'tratamento'."</span>)</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># UI</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="st">"Gráficos 3D Interativos: Consumo foliar de **Atta sexdens** Função de Temperatura e Dia por Tratamento"</span>),</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sliderInput</span>(<span class="st">"num_bins"</span>, <span class="st">"Número de Intervalos (afeta a suavidade da superfície):"</span>,</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>                  <span class="at">min =</span> <span class="dv">5</span>, <span class="at">max =</span> <span class="dv">30</span>, <span class="at">value =</span> <span class="dv">15</span>),</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"paleta"</span>, <span class="st">"Escala de Cores:"</span>,</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>                  <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"Viridis"</span>, <span class="st">"Magma"</span>, <span class="st">"Inferno"</span>, <span class="st">"Plasma"</span>, <span class="st">"Spectral"</span>),</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>                  <span class="at">selected =</span> <span class="st">"Viridis"</span>)</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">uiOutput</span>(<span class="st">"tratamentoTabs"</span>)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Server</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Função auxiliar para gerar o gráfico 3D para um tratamento específico</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>  generate_3d_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(df, tratamento_selecionado, num_bins, paleta_escolhida) {</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Gerando gráfico 3D para o tratamento:"</span>, tratamento_selecionado))</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>    df_filtrado <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(tratamento <span class="sc">==</span> tratamento_selecionado)</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(df_filtrado) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">||</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(<span class="fu">unique</span>(df_filtrado<span class="sc">$</span>temperatura)) <span class="sc">&lt;</span> <span class="dv">2</span> <span class="sc">||</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>        <span class="fu">length</span>(<span class="fu">unique</span>(df_filtrado<span class="sc">$</span>dia)) <span class="sc">&lt;</span> <span class="dv">2</span>) {</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>      <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"AVISO: Dados insuficientes para o tratamento:"</span>, tratamento_selecionado))</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">plotly_empty</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>               <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Dados insuficientes para Tratamento:"</span>, tratamento_selecionado),</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>                      <span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Temperatura (°C)"</span>),</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Dia"</span>),</span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Consumo Médio"</span>))))</span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>    df_plot_3d <span class="ot">&lt;-</span> df_filtrado <span class="sc">%&gt;%</span></span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">temp_bin =</span> <span class="fu">cut</span>(temperatura, <span class="at">breaks =</span> num_bins, <span class="at">include.lowest =</span> <span class="cn">TRUE</span>, <span class="at">ordered_result =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">dia_bin =</span> <span class="fu">cut</span>(dia, <span class="at">breaks =</span> num_bins, <span class="at">include.lowest =</span> <span class="cn">TRUE</span>, <span class="at">ordered_result =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(temp_bin, dia_bin) <span class="sc">%&gt;%</span></span>
+<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(</span>
+<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a>        <span class="at">consumo_medio =</span> <span class="fu">mean</span>(consumo_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">temp_num =</span> <span class="fu">as.numeric</span>(<span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">(|</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">""</span>, temp_bin), <span class="st">","</span>), <span class="cf">function</span>(x) <span class="fu">mean</span>(<span class="fu">as.numeric</span>(x)))),</span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a>        <span class="at">dia_num =</span> <span class="fu">as.numeric</span>(<span class="fu">sapply</span>(<span class="fu">strsplit</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">(|</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">""</span>, dia_bin), <span class="st">","</span>), <span class="cf">function</span>(x) <span class="fu">mean</span>(<span class="fu">as.numeric</span>(x))))</span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(temp_num) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(dia_num) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(consumo_medio))</span>
+<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">nrow</span>(df_plot_3d) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>      <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"AVISO: df_plot_3d vazio após agrupamento para o tratamento:"</span>, tratamento_selecionado))</span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">plotly_empty</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>               <span class="fu">layout</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Sem dados para plotar para Tratamento:"</span>, tratamento_selecionado),</span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a>                      <span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Temperatura (°C)"</span>),</span>
+<span id="cb18-88"><a href="#cb18-88" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Dia"</span>),</span>
+<span id="cb18-89"><a href="#cb18-89" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Consumo Médio"</span>))))</span>
+<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a>    color_scale <span class="ot">&lt;-</span> <span class="cf">switch</span>(paleta_escolhida,</span>
+<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Viridis"</span> <span class="ot">=</span> <span class="st">"Viridis"</span>,</span>
+<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Magma"</span> <span class="ot">=</span> <span class="st">"Magma"</span>,</span>
+<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Inferno"</span> <span class="ot">=</span> <span class="st">"Inferno"</span>,</span>
+<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Plasma"</span> <span class="ot">=</span> <span class="st">"Plasma"</span>,</span>
+<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Spectral"</span> <span class="ot">=</span> <span class="st">"Spectral"</span>)</span>
+<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(df_plot_3d, <span class="at">x =</span> <span class="sc">~</span>temp_num, <span class="at">y =</span> <span class="sc">~</span>dia_num, <span class="at">z =</span> <span class="sc">~</span>consumo_medio,</span>
+<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a>                 <span class="at">type =</span> <span class="st">"scatter3d"</span>, <span class="at">mode =</span> <span class="st">"markers"</span>,</span>
+<span id="cb18-101"><a href="#cb18-101" aria-hidden="true" tabindex="-1"></a>                 <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">color =</span> <span class="sc">~</span>consumo_medio, <span class="at">colorscale =</span> color_scale,</span>
+<span id="cb18-102"><a href="#cb18-102" aria-hidden="true" tabindex="-1"></a>                               <span class="at">colorbar =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Consumo Médio"</span>), <span class="at">showscale =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a>                 <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Temp: "</span>, <span class="fu">round</span>(temp_num, <span class="dv">2</span>), <span class="st">"°C&lt;br&gt;"</span>,</span>
+<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"Dia: "</span>, <span class="fu">round</span>(dia_num, <span class="dv">2</span>), <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"Consumo Médio: "</span>, <span class="fu">round</span>(consumo_medio, <span class="dv">2</span>)),</span>
+<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a>                 <span class="at">hoverinfo =</span> <span class="st">"text"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a>      <span class="fu">layout</span>(<span class="at">scene =</span> <span class="fu">list</span>(<span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Temperatura (°C)"</span>),</span>
+<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a>                          <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Dia"</span>),</span>
+<span id="cb18-109"><a href="#cb18-109" aria-hidden="true" tabindex="-1"></a>                          <span class="at">zaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Consumo Médio"</span>),</span>
+<span id="cb18-110"><a href="#cb18-110" aria-hidden="true" tabindex="-1"></a>                          <span class="co"># --- MUDANÇA AQUI: Define o aspectmode para "cube" ---</span></span>
+<span id="cb18-111"><a href="#cb18-111" aria-hidden="true" tabindex="-1"></a>                          <span class="at">aspectmode =</span> <span class="st">"cube"</span> <span class="co"># Garante que os eixos tenham a mesma proporção</span></span>
+<span id="cb18-112"><a href="#cb18-112" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb18-113"><a href="#cb18-113" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Tratamento:"</span>, tratamento_selecionado))</span>
+<span id="cb18-114"><a href="#cb18-114" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-115"><a href="#cb18-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Habilitar a barra de modos para zoom e pan (já estava configurado para isso)</span></span>
+<span id="cb18-116"><a href="#cb18-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Comentar ou remover a linha abaixo se quiser todos os botões da barra:</span></span>
+<span id="cb18-117"><a href="#cb18-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># p &lt;- p %&gt;% config(modeBarButtonsToRemove = c('zoomIn3d', 'zoomOut3d', 'pan3d', 'orbitRotation', 'tableRotation', 'resetCameraLastSave3d', 'hoverClosest3d', 'hoverCompare3d', 'sendDataToCloud', 'toggleHover', 'toImage', 'autoscale'), displaylogo = FALSE)</span></span>
+<span id="cb18-118"><a href="#cb18-118" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-119"><a href="#cb18-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb18-120"><a href="#cb18-120" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-121"><a href="#cb18-121" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-122"><a href="#cb18-122" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>tratamentoTabs <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb18-123"><a href="#cb18-123" aria-hidden="true" tabindex="-1"></a>    myTabs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tratamentos_unicos, <span class="cf">function</span>(tratamento) {</span>
+<span id="cb18-124"><a href="#cb18-124" aria-hidden="true" tabindex="-1"></a>      plot_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"plot3D_"</span>, <span class="fu">gsub</span>(<span class="st">"[^[:alnum:]]"</span>, <span class="st">""</span>, tratamento))</span>
+<span id="cb18-125"><a href="#cb18-125" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb18-126"><a href="#cb18-126" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabPanel</span>(</span>
+<span id="cb18-127"><a href="#cb18-127" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Tratamento:"</span>, tratamento),</span>
+<span id="cb18-128"><a href="#cb18-128" aria-hidden="true" tabindex="-1"></a>        <span class="fu">plotlyOutput</span>(plot_id, <span class="at">height =</span> <span class="st">"500px"</span>)</span>
+<span id="cb18-129"><a href="#cb18-129" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb18-130"><a href="#cb18-130" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb18-131"><a href="#cb18-131" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-132"><a href="#cb18-132" aria-hidden="true" tabindex="-1"></a>    <span class="fu">do.call</span>(tabsetPanel, myTabs)</span>
+<span id="cb18-133"><a href="#cb18-133" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb18-134"><a href="#cb18-134" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-135"><a href="#cb18-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span>({</span>
+<span id="cb18-136"><a href="#cb18-136" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lapply</span>(tratamentos_unicos, <span class="cf">function</span>(tratamento) {</span>
+<span id="cb18-137"><a href="#cb18-137" aria-hidden="true" tabindex="-1"></a>      plot_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"plot3D_"</span>, <span class="fu">gsub</span>(<span class="st">"[^[:alnum:]]"</span>, <span class="st">""</span>, tratamento))</span>
+<span id="cb18-138"><a href="#cb18-138" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb18-139"><a href="#cb18-139" aria-hidden="true" tabindex="-1"></a>      output[[plot_id]] <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
+<span id="cb18-140"><a href="#cb18-140" aria-hidden="true" tabindex="-1"></a>        <span class="fu">generate_3d_plot</span>(dados_brutos, tratamento, input<span class="sc">$</span>num_bins, input<span class="sc">$</span>paleta)</span>
+<span id="cb18-141"><a href="#cb18-141" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb18-142"><a href="#cb18-142" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb18-143"><a href="#cb18-143" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb18-144"><a href="#cb18-144" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-145"><a href="#cb18-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-146"><a href="#cb18-146" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p></p><div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div><p></p>
+</div>
+</div>
+<p>O app shiny gerado por esse script pode ser visualizado no seguinte link: https://dclira.shinyapps.io/app_test/</p>
 
 
 </section>

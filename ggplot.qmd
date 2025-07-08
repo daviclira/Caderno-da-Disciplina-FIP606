@@ -19,7 +19,7 @@ milho <- read_excel("dados-diversos.xlsx",
                        sheet = "milho")
 
 ggplot(data = milho, aes(x = hybrid, y = yield)) +  
-  geom_line() +  # Camada de geometria (pontos, linhas, barras, etc.)
+  geom_jitter() +  # Camada de geometria (pontos, linhas, barras, etc.)
   labs() +    # Rótulos (título, eixos)
   theme()     # Ajustes estéticos (cores, fontes, fundo)
 ```
@@ -52,9 +52,12 @@ ggplot(milho, aes(x = hybrid, y = yield))
 
 ```{r}
 
-ggplot(milho, aes(x = hybrid, y = yield))+  
-  geom_point(color = "blue", size = 3) 
+ggplot(milho, aes(x = hybrid, y = yield))+
+  geom_boxplot(outlier.color = "white") +
+  geom_jitter(color = "blue", size = 1) +
+  theme_classic()
 ```
+*Objetos da categoria "geom" podem ser utilizados de forma conjunta, sendo que os últimos a serem adicionados ao script aparecerão nas camadas mais acima.*
 
 ### \*\*C. Escalas (scale\_\*)\*\*
 
@@ -67,10 +70,12 @@ ggplot(milho, aes(x = hybrid, y = yield))+
 
 ```{r}
 
-ggplot(milho, aes(x = hybrid, y = yield))+  
-  geom_point() +  
-  scale_color_manual(values = c("red", "green", "blue")) 
+ggplot(milho, aes(x = hybrid, y = yield, color = block))+  
+  geom_jitter() +
+  scale_color_distiller()
 ```
+
+*Nesse caso, os comandos "scale_color" interagem com o que está definido na variável "color", dentro de "aes". Essa interação pode ser moldada de forma manual, ou usando paletas prontas.*
 
 ### \*\*D. Facetas (facet\_\*)\*\*
 
@@ -83,7 +88,7 @@ ggplot(milho, aes(x = hybrid, y = yield))+
 ```{r}
 
 ggplot(milho, aes(x = hybrid, y = yield))+  
-  geom_point() + 
+  geom_jitter() + 
   facet_wrap(~method) 
 ```
 
@@ -98,7 +103,7 @@ ggplot(milho, aes(x = hybrid, y = yield))+
 ```{r}
 
 ggplot(milho, aes(x = hybrid, y = yield))+  
-  geom_point() +  
+  geom_boxplot() +  
   labs(title = "Efeitos dos híbridos na produção de milho", x = "Híbridos (wt)", y = "Produção") +  
   theme_minimal()  
 ```

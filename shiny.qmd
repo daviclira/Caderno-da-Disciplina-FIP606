@@ -23,7 +23,7 @@ Contém a lógica do R que processa os inputs e gera outputs (gráficos, tabelas
 
 ------------------------------------------------------------------------
 
-## Exemplo Básico
+## Estrutura Básica
 
 ```{r}
 if(!require(shiny)) install.packages("shiny")
@@ -54,3 +54,165 @@ shinyApp(ui = ui, server = server)
 
 
 ```
+
+## Exemplo
+
+O script a seguir, foi utilizado como teste para a aula de produção de aplicativos em shiny, na disciplina FIP606.\
+
+```{r}
+library(shiny)
+library(ggplot2)
+library(gsheet)
+library(dplyr)
+library(scales)
+library(plotly)
+
+# --- Carregamento Direto dos Dados ---
+url_gsheet <- "https://docs.google.com/spreadsheets/d/1lX3qjWBZEVRQgBTAfj1tQ_ZGNj5a75D1VTKXwXDdTO8/edit"
+url_export <- gsub("/edit$", "/export?format=csv", url_gsheet)
+
+dados_brutos <- tryCatch({
+  df <- gsheet2tbl(url_export)
+  colunas_necessarias <- c("consumo_total", "temperatura", "dia", "tratamento")
+  if(!all(colunas_necessarias %in% names(df))) {
+    stop("O dataset não contém todas as colunas necessárias: consumo_total, temperatura, dia e tratamento")
+  }
+  
+  df %>%
+    mutate(
+      consumo_total = as.numeric(consumo_total),
+      temperatura = as.numeric(temperatura),
+      dia = as.numeric(dia),
+      tratamento = as.factor(tratamento)
+    )
+}, error = function(e) {
+  stop(paste("Erro ao carregar os dados:", e$message))
+})
+
+# Obter os tratamentos únicos
+tratamentos_unicos <- levels(dados_brutos$tratamento)
+tratamentos_unicos <- sort(tratamentos_unicos) # Ordena para consistência
+
+if (length(tratamentos_unicos) == 0) {
+  stop("Nenhum tratamento encontrado nos dados. Verifique a coluna 'tratamento'.")
+}
+
+# UI
+ui <- fluidPage(
+  titlePanel("Gráficos 3D Interativos: Consumo foliar de **Atta sexdens** Função de Temperatura e Dia por Tratamento"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("num_bins", "Número de Intervalos (afeta a suavidade da superfície):",
+                  min = 5, max = 30, value = 15),
+      selectInput("paleta", "Escala de Cores:",
+                  choices = c("Viridis", "Magma", "Inferno", "Plasma", "Spectral"),
+                  selected = "Viridis")
+    ),
+    mainPanel(
+      uiOutput("tratamentoTabs")
+    )
+  )
+)
+
+# Server
+server <- function(input, output, session) {
+  
+  # Função auxiliar para gerar o gráfico 3D para um tratamento específico
+  generate_3d_plot <- function(df, tratamento_selecionado, num_bins, paleta_escolhida) {
+    print(paste("Gerando gráfico 3D para o tratamento:", tratamento_selecionado))
+    df_filtrado <- df %>% filter(tratamento == tratamento_selecionado)
+    
+    if (nrow(df_filtrado) == 0 ||
+        length(unique(df_filtrado$temperatura)) < 2 ||
+        length(unique(df_filtrado$dia)) < 2) {
+      print(paste("AVISO: Dados insuficientes para o tratamento:", tratamento_selecionado))
+      return(plotly_empty() %>%
+               layout(title = paste("Dados insuficientes para Tratamento:", tratamento_selecionado),
+                      scene = list(xaxis = list(title = "Temperatura (°C)"),
+                                   yaxis = list(title = "Dia"),
+                                   zaxis = list(title = "Consumo Médio"))))
+    }
+    
+    df_plot_3d <- df_filtrado %>%
+      mutate(
+        temp_bin = cut(temperatura, breaks = num_bins, include.lowest = TRUE, ordered_result = TRUE),
+        dia_bin = cut(dia, breaks = num_bins, include.lowest = TRUE, ordered_result = TRUE)
+      ) %>%
+      group_by(temp_bin, dia_bin) %>%
+      summarise(
+        consumo_medio = mean(consumo_total, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        temp_num = as.numeric(sapply(strsplit(gsub("\\(|\\]", "", temp_bin), ","), function(x) mean(as.numeric(x)))),
+        dia_num = as.numeric(sapply(strsplit(gsub("\\(|\\]", "", dia_bin), ","), function(x) mean(as.numeric(x))))
+      ) %>%
+      filter(!is.na(temp_num) & !is.na(dia_num) & !is.na(consumo_medio))
+    
+    if (nrow(df_plot_3d) == 0) {
+      print(paste("AVISO: df_plot_3d vazio após agrupamento para o tratamento:", tratamento_selecionado))
+      return(plotly_empty() %>%
+               layout(title = paste("Sem dados para plotar para Tratamento:", tratamento_selecionado),
+                      scene = list(xaxis = list(title = "Temperatura (°C)"),
+                                   yaxis = list(title = "Dia"),
+                                   zaxis = list(title = "Consumo Médio"))))
+    }
+    
+    color_scale <- switch(paleta_escolhida,
+                          "Viridis" = "Viridis",
+                          "Magma" = "Magma",
+                          "Inferno" = "Inferno",
+                          "Plasma" = "Plasma",
+                          "Spectral" = "Spectral")
+    
+    p <- plot_ly(df_plot_3d, x = ~temp_num, y = ~dia_num, z = ~consumo_medio,
+                 type = "scatter3d", mode = "markers",
+                 marker = list(size = 8, color = ~consumo_medio, colorscale = color_scale,
+                               colorbar = list(title = "Consumo Médio"), showscale = TRUE),
+                 text = ~paste("Temp: ", round(temp_num, 2), "°C<br>",
+                               "Dia: ", round(dia_num, 2), "<br>",
+                               "Consumo Médio: ", round(consumo_medio, 2)),
+                 hoverinfo = "text") %>%
+      layout(scene = list(xaxis = list(title = "Temperatura (°C)"),
+                          yaxis = list(title = "Dia"),
+                          zaxis = list(title = "Consumo Médio"),
+                          # --- MUDANÇA AQUI: Define o aspectmode para "cube" ---
+                          aspectmode = "cube" # Garante que os eixos tenham a mesma proporção
+      ),
+      title = paste("Tratamento:", tratamento_selecionado))
+    
+    # Habilitar a barra de modos para zoom e pan (já estava configurado para isso)
+    # Comentar ou remover a linha abaixo se quiser todos os botões da barra:
+    # p <- p %>% config(modeBarButtonsToRemove = c('zoomIn3d', 'zoomOut3d', 'pan3d', 'orbitRotation', 'tableRotation', 'resetCameraLastSave3d', 'hoverClosest3d', 'hoverCompare3d', 'sendDataToCloud', 'toggleHover', 'toImage', 'autoscale'), displaylogo = FALSE)
+    
+    return(p)
+  }
+  
+  output$tratamentoTabs <- renderUI({
+    myTabs <- lapply(tratamentos_unicos, function(tratamento) {
+      plot_id <- paste0("plot3D_", gsub("[^[:alnum:]]", "", tratamento))
+      
+      tabPanel(
+        title = paste("Tratamento:", tratamento),
+        plotlyOutput(plot_id, height = "500px")
+      )
+    })
+    
+    do.call(tabsetPanel, myTabs)
+  })
+  
+  observe({
+    lapply(tratamentos_unicos, function(tratamento) {
+      plot_id <- paste0("plot3D_", gsub("[^[:alnum:]]", "", tratamento))
+      
+      output[[plot_id]] <- renderPlotly({
+        generate_3d_plot(dados_brutos, tratamento, input$num_bins, input$paleta)
+      })
+    })
+  })
+}
+
+shinyApp(ui, server)
+```
+
+O app shiny gerado por esse script pode ser visualizado no seguinte link: https://dclira.shinyapps.io/app_test/
